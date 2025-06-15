@@ -15,10 +15,10 @@ import gdown
 def download_models_from_drive():
     model_drive_ids = {
         "model/rf1.pkl": "1U_Gi0FFSGMrPQpRGIzEmA1ZoIjVi2OvX",
-        "model/rf2.pkl": "1EAbMoYPaDzTfT4PL4IcBt_L1cRwYhhjr,
-        "model/rf3.pkl": "1ze6iQyYKBLOX1kkOgD6mvjFy8o-jS8Om,
-        "model/rf4.pkl": "1QkdiFoijSEOj8tE5Rc5-hTUb8s8RM64,
-        "model/rf5.pkl": "1JIuiELld28e6cnJBrBaiehZHW1fC-mby,
+        "model/rf2.pkl": "1EAbMoYPaDzTfT4PL4IcBt_L1cRwYhhjr",
+        "model/rf3.pkl": "1ze6iQyYKBLOX1kkOgD6mvjFy8o-jS8Om",
+        "model/rf4.pkl": "1QkdiFoijSEOj8tE5Rc5-hTUb8s8RM64",
+        "model/rf5.pkl": "1JIuiELld28e6cnJBrBaiehZHW1fC-mby",
     }
 
     os.makedirs("model", exist_ok=True)  # Buat folder jika belum ada
