@@ -178,7 +178,7 @@ def main():
         else:
             # Mapping rasio -> test_size dan file model
             rasio_opsi = {
-                "50:50": {"test_size": 0.5, "drive_id": "1JIuiELld28e6cnJBrBaiehZHW1fC-mby"},
+                "50:50": {"test_size": 0.5, "drive_id": "1Vh6a9cm3dxEJW0y_5iNgic1Y-RAvsoPT"},
                 "60:40": {"test_size": 0.4, "drive_id": "1QkdiFoijSEOj8tE5Rc5-hTUb8s8RM64_"},
                 "70:30": {"test_size": 0.3, "drive_id": "1ze6iQyYKBLOX1kkOgD6mvjFy8o-jS8Om"}, 
                 "80:20": {"test_size": 0.2, "drive_id": "1EAbMoYPaDzTfT4PL4IcBt_L1cRwYhhjr"},
