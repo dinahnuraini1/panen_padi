@@ -264,7 +264,7 @@ def main():
 
             # Mapping rasio ke file model hasil optimasi
             rasio_opsi_pso = {
-                "50:50": "model/rfpso_1.pkl",
+                "50:50": "1Kax1ZcS0toPrQQR7KLZwCjZFBZ2MwezM",
                 "60:40": "model/rfpso_2.pkl",
                 "70:30": "model/rfpso_3.pkl",
                 "80:20": "model/rfpso_4.pkl",
