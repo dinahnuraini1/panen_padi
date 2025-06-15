@@ -184,12 +184,7 @@ def main():
                 "80:20": {"test_size": 0.2, "model_data": "1jklMNOpqrSTUvWXyzABC45678"},
                 "90:10": {"test_size": 0.1, "model_data": "1mnoPQRstUVwxyZABCD56789"},
             }
-             #     "50:50": "1abcDEFghiJKLmnOpqrSTUvwXYZ12345",  # ID file Google Drive
-             #     "60:40": "1defGHIjklMNOpqrSTUvwxYZ23456",
-             #     "70:30": "1ghiJKLmnoPQRstUVwxyzAB34567",
-             #     "80:20": "1jklMNOpqrSTUvWXyzABC45678",
-             #     "90:10": "1mnoPQRstUVwxyZABCD56789"
-             # }
+    
 
             # Pilihan rasio dari dropdown
             selected_rasio_label = st.selectbox("Pilih rasio data latih dan uji:", list(rasio_opsi.keys()))
