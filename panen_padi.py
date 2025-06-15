@@ -205,7 +205,7 @@ def main():
             y = st.session_state["y"]
 
             X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=selected_rasio["test_size"], random_state=42
+                X, y, test_size=test_size, random_state=42
             )
 
            # Unduh file model jika belum ada
@@ -213,17 +213,19 @@ def main():
             os.makedirs(model_dir, exist_ok=True)
             model_path = f"{model_dir}/model_rf_{selected_rasio_label.replace(':', '')}.pkl"
 
-
             if not os.path.exists(model_path):
                 with st.spinner("🔽 Mengunduh model dari Google Drive..."):
                     url = f"https://drive.google.com/uc?id={drive_id}"
                     try:
-                        gdown.download(url, model_path, quiet=False)
+                        gdown.download(url, model_path, quiet=False, fuzzy=True)
                     except Exception as e:
                         st.error(f"Gagal mengunduh model: {e}")
+                        st.stop()
 
             # Load model
-            if os.path.exists(model_path):
+            if not os.path.exists(model_path) or os.path.getsize(model_path) == 0:
+                st.error("❌ File model tidak ditemukan atau kosong setelah diunduh.")
+                st.stop()
                 try:
                     with open(model_path, "rb") as f:
                         model_data = pickle.load(f)
@@ -246,10 +248,11 @@ def main():
                             st.warning("📈 MAPE Testing > 10%. Lakukan optimasi menggunakan PSO.")
                     else:
                         st.error("Beberapa parameter model tidak ditemukan dalam file.")
+                except EOFError:
+                    st.error("❌ File model rusak atau tidak lengkap ('Ran out of input'). Coba unduh ulang.")
                 except Exception as e:
                     st.error(f"❌ Terjadi kesalahan saat memuat model: {e}")
-            else:
-                st.error("❌ File model tidak ditemukannnn.")
+       
 
     elif menu == "Random Forest + PSO Modelling":
         st.header("Random Forest + PSO Modelling")
