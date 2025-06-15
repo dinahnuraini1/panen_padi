@@ -205,7 +205,7 @@ def main():
             y = st.session_state["y"]
 
             X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=selected_rasio["test_size"], random_state=42
+                X, y, test_size=test_size, random_state=42
             )
 
            # Unduh file model jika belum ada
@@ -215,9 +215,12 @@ def main():
 
 
             if not os.path.exists(model_path):
-            with st.spinner("🔽 Mengunduh model dari Google Drive..."):
-                url = f"https://drive.google.com/uc?id={drive_id}"
-                gdown.download(url, model_path, quiet=False)
+                with st.spinner("🔽 Mengunduh model dari Google Drive..."):
+                    url = f"https://drive.google.com/uc?id={drive_id}"
+                    try:
+                        gdown.download(url, model_path, quiet=False)
+                    except Exception as e:
+                        st.error(f"Gagal mengunduh model: {e}")
 
             # Load model
             if os.path.exists(model_path):
@@ -246,7 +249,7 @@ def main():
                 except Exception as e:
                     st.error(f"❌ Terjadi kesalahan saat memuat model: {e}")
             else:
-                st.error("❌ File model tidak ditemukan.")
+                st.error("❌ File model tidak ditemukannnn.")
 
     elif menu == "Random Forest + PSO Modelling":
         st.header("Random Forest + PSO Modelling")
