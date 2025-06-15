@@ -180,7 +180,7 @@ def main():
             rasio_opsi = {
                 "50:50": {"test_size": 0.5, "drive_id": "1JIuiELld28e6cnJBrBaiehZHW1fC-mby"},
                 "60:40": {"test_size": 0.4, "drive_id": "1defGHIjklMNOpqrSTUvwxYZ23456"},
-                "70:30": {"test_size": 0.3, "drive_id": "1ghiJKLmnoPQRstUVwxyzAB34567"},
+                "70:30": {"test_size": 0.3, "drive_id": "1ze6iQyYKBLOX1kkOgD6mvjFy8o-jS8Om"}, 
                 "80:20": {"test_size": 0.2, "drive_id": "1jklMNOpqrSTUvWXyzABC45678"},
                 "90:10": {"test_size": 0.1, "drive_id": "1mnoPQRstUVwxyZABCD56789"},
             }
