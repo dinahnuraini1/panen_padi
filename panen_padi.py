@@ -198,7 +198,7 @@ def main():
         else:
             # Mapping rasio -> test_size dan file model
             rasio_opsi = {
-                "50:50": {"test_size": 0.5, "model_data": "model/rf5.pkl"},
+                "50:50": {"test_size": 0.5, "model_data": "model/rf5.pkl": "1JIuiELld28e6cnJBrBaiehZHW1fC-mby"},
                 "60:40": {"test_size": 0.4, "model_data": "model/rf4.pkl"},
                 "70:30": {"test_size": 0.3, "model_data": "model/rf3.pkl"},
                 "80:20": {"test_size": 0.2, "model_data": "model/rf2.pkl"},
