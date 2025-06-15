@@ -25,7 +25,7 @@ def main():
     
        
     # Sidebar Menu
-    st.sidebar.image("image/panen.png", width=200) 
+    st.sidebar.image("panen.png", width=200) 
    # Menambahkan judul besar di sidebar
     st.sidebar.markdown("<h2 style='font-size: 24px;'> select menu</h2>", unsafe_allow_html=True)
 
