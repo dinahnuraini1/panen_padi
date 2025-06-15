@@ -178,7 +178,7 @@ def main():
         else:
             # Mapping rasio -> test_size dan file model
             rasio_opsi = {
-                "50:50": {"test_size": 0.5, "drive_id": "1Vh6a9cm3dxEJW0y_5iNgic1Y-RAvsoPT"},
+                "50:50": {"test_size": 0.5, "drive_id": "1rHVRZ9rR8UbMgG4ur4Uq69lh7b__i0vH"},
                 "60:40": {"test_size": 0.4, "drive_id": "1QkdiFoijSEOj8tE5Rc5-hTUb8s8RM64_"},
                 "70:30": {"test_size": 0.3, "drive_id": "1ze6iQyYKBLOX1kkOgD6mvjFy8o-jS8Om"}, 
                 "80:20": {"test_size": 0.2, "drive_id": "1EAbMoYPaDzTfT4PL4IcBt_L1cRwYhhjr"},
@@ -265,10 +265,10 @@ def main():
             # Mapping rasio ke file model hasil optimasi
             rasio_opsi_pso = {
                 "50:50": "1Kax1ZcS0toPrQQR7KLZwCjZFBZ2MwezM",
-                "60:40": "model/rfpso_2.pkl",
-                "70:30": "model/rfpso_3.pkl",
-                "80:20": "model/rfpso_4.pkl",
-                "90:10": "model/rfpso_5.pkl",
+                "60:40": "1D9vyfEQ2Bi8wST39GkgmjNMOqeweRcQb",
+                "70:30": "1QJgDuqKUbizKyNLVCxtiaVvfjQeJSy_g",
+                "80:20": "1x-CBDynz1IGXFKlAtlGUlt7WYx21XVbi",
+                "90:10": "1lnY0GytPzY66S2JAMTdHWztTqiwcTCkm",
             }
 
             # Dropdown untuk pilih rasio
@@ -289,6 +289,22 @@ def main():
 
             st.info(f"Jumlah data latih: {train_count}")
             st.info(f"Jumlah data uji: {test_count}")
+            # Tentukan lokasi file model
+            if len(file_ref) == 33 and not os.path.exists(file_ref):  # Deteksi jika itu Google Drive ID
+                model_dir = "model"
+                os.makedirs(model_dir, exist_ok=True)
+                model_path_pso = f"{model_dir}/rfpso_{selected_rasio_label.replace(':', '')}.pkl"
+    
+                # Unduh file jika belum ada
+                if not os.path.exists(model_path_pso) or os.path.getsize(model_path_pso) == 0:
+                    with st.spinner("🔽 Mengunduh model hasil PSO dari Google Drive..."):
+                        try:
+                            gdown.download(f"https://drive.google.com/uc?id={file_ref}", model_path_pso, quiet=False, fuzzy=True)
+                        except Exception as e:
+                            st.error(f"Gagal mengunduh model dari Google Drive: {e}")
+                            st.stop()
+            else:
+                model_path_pso = file_ref  # Ini file lokal
 
             # Cek dan load file model PSO
             if os.path.exists(model_path_pso):
