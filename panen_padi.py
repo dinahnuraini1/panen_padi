@@ -178,17 +178,19 @@ def main():
         else:
             # Mapping rasio -> test_size dan file model
             rasio_opsi = {
-                "50:50": {"test_size": 0.5, "model_data": "1JIuiELld28e6cnJBrBaiehZHW1fC-mby"},
-                "60:40": {"test_size": 0.4, "model_data": "1defGHIjklMNOpqrSTUvwxYZ23456"},
-                "70:30": {"test_size": 0.3, "model_data": "1ghiJKLmnoPQRstUVwxyzAB34567"},
-                "80:20": {"test_size": 0.2, "model_data": "1jklMNOpqrSTUvWXyzABC45678"},
-                "90:10": {"test_size": 0.1, "model_data": "1mnoPQRstUVwxyZABCD56789"},
+                "50:50": {"test_size": 0.5, "drive_id": "1JIuiELld28e6cnJBrBaiehZHW1fC-mby"},
+                "60:40": {"test_size": 0.4, "drive_id": "1defGHIjklMNOpqrSTUvwxYZ23456"},
+                "70:30": {"test_size": 0.3, "drive_id": "1ghiJKLmnoPQRstUVwxyzAB34567"},
+                "80:20": {"test_size": 0.2, "drive_id": "1jklMNOpqrSTUvWXyzABC45678"},
+                "90:10": {"test_size": 0.1, "drive_id": "1mnoPQRstUVwxyZABCD56789"},
             }
     
 
             # Pilihan rasio dari dropdown
             selected_rasio_label = st.selectbox("Pilih rasio data latih dan uji:", list(rasio_opsi.keys()))
             selected_rasio = rasio_opsi[selected_rasio_label]
+            test_size = selected_rasio["test_size"]
+            drive_id = selected_rasio["drive_id"]
 
             # Hitung jumlah data
             total_data = len(st.session_state["X"])
@@ -206,37 +208,45 @@ def main():
                 X, y, test_size=selected_rasio["test_size"], random_state=42
             )
 
-            model_path = selected_rasio["model_data"]  # path file model
+           # Unduh file model jika belum ada
+            model_dir = "model"
+            os.makedirs(model_dir, exist_ok=True)
+            model_path = f"{model_dir}/model_rf_{selected_rasio_label.replace(':', '')}.pkl"
 
+
+            if not os.path.exists(model_path):
+            with st.spinner("🔽 Mengunduh model dari Google Drive..."):
+                url = f"https://drive.google.com/uc?id={drive_id}"
+                gdown.download(url, model_path, quiet=False)
+
+            # Load model
             if os.path.exists(model_path):
                 try:
                     with open(model_path, "rb") as f:
                         model_data = pickle.load(f)
-
+    
                     model_rf = model_data.get("model")
                     params = model_data.get("params", {})
                     mape_train = params.get("mape_train")
                     mape_test = params.get("mape_test")
-
-                    if model_rf and params and mape_train is not None and mape_test is not None:
-                        # Tampilkan parameter model dalam input field yang tidak bisa diubah (read-only)
+    
+                    if model_rf and mape_train is not None and mape_test is not None:
                         st.subheader("📌 Parameter Model Random Forest")
-
                         st.number_input("Jumlah pohon (n_estimators)", value=params.get("n_estimators", 0), disabled=True)
                         st.number_input("Kedalaman maksimum pohon (max_depth)", value=params.get("max_depth", 0), disabled=True)
                         st.number_input("Fitur maksimum (max_features)", value=params.get("max_features", 0), disabled=True)
-                        # st.success("Model berhasil dimuat!")
+    
                         st.write(f"📊 MAPE Training: **{mape_train:.2f}%**")
                         st.write(f"📊 MAPE Testing : **{mape_test:.2f}%**")
-                        # Tambahan: jika MAPE < 10%, sarankan untuk optimasi
+    
                         if mape_test > 10:
                             st.warning("📈 MAPE Testing > 10%. Lakukan optimasi menggunakan PSO.")
                     else:
                         st.error("Beberapa parameter model tidak ditemukan dalam file.")
                 except Exception as e:
-                    st.error(f"Terjadi kesalahan saat memuat model: {e}")
+                    st.error(f"❌ Terjadi kesalahan saat memuat model: {e}")
             else:
-                st.error("File model tidak ditemukan.")
+                st.error("❌ File model tidak ditemukan.")
 
     elif menu == "Random Forest + PSO Modelling":
         st.header("Random Forest + PSO Modelling")
