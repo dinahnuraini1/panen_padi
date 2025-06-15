@@ -251,7 +251,7 @@ def main():
             else:
                 st.error("❌ File model tidak ditemukannnn.")
 
-        elif menu == "Random Forest + PSO Modelling":
+    elif menu == "Random Forest + PSO Modelling":
         st.header("Random Forest + PSO Modelling")
     
         if "X" not in st.session_state or "y" not in st.session_state:
