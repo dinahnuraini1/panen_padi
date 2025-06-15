@@ -214,6 +214,8 @@ def main():
             model_path = f"{model_dir}/model_rf_{selected_rasio_label.replace(':', '')}.pkl"
 
             if not os.path.exists(model_path) or os.path.getsize(model_path) == 0:
+                if os.path.exists(model_path):
+                    os.remove(model_path)
                 with st.spinner("🔽 Mengunduh model dari Google Drive..."):
                     url = f"https://drive.google.com/uc?id={drive_id}"
                     try:
