@@ -213,7 +213,7 @@ def main():
             os.makedirs(model_dir, exist_ok=True)
             model_path = f"{model_dir}/model_rf_{selected_rasio_label.replace(':', '')}.pkl"
 
-            if not os.path.exists(model_path):
+            if not os.path.exists(model_path) or os.path.getsize(model_path) == 0:
                 with st.spinner("🔽 Mengunduh model dari Google Drive..."):
                     url = f"https://drive.google.com/uc?id={drive_id}"
                     try:
@@ -223,9 +223,7 @@ def main():
                         st.stop()
 
             # Load model
-            if not os.path.exists(model_path) or os.path.getsize(model_path) == 0:
-                st.error("❌ File model tidak ditemukan atau kosong setelah diunduh.")
-                st.stop()
+            if os.path.exists(model_path):
                 try:
                     with open(model_path, "rb") as f:
                         model_data = pickle.load(f)
@@ -250,10 +248,9 @@ def main():
                         st.error("Beberapa parameter model tidak ditemukan dalam file.")
                 except EOFError:
                     st.error("❌ File model rusak atau tidak lengkap ('Ran out of input'). Coba unduh ulang.")
-                except Exception as e:
-                    st.error(f"❌ Terjadi kesalahan saat memuat model: {e}")
-       
-
+            else:
+                st.error("file tidak ditemykan")
+               
     elif menu == "Random Forest + PSO Modelling":
         st.header("Random Forest + PSO Modelling")
     
