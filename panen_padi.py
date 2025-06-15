@@ -219,6 +219,7 @@ def main():
                 with st.spinner("🔽 Mengunduh model dari Google Drive..."):
                     url = f"https://drive.google.com/uc?id={drive_id}"
                     try:
+                        import gdown
                         gdown.download(url, model_path, quiet=False, fuzzy=True)
                     except Exception as e:
                         st.error(f"Gagal mengunduh model: {e}")
