@@ -251,18 +251,17 @@ def main():
             else:
                 st.error("❌ File model tidak ditemukannnn.")
 
-    elif menu == "Random Forest + PSO Modelling":
+        elif menu == "Random Forest + PSO Modelling":
         st.header("Random Forest + PSO Modelling")
-
+    
         if "X" not in st.session_state or "y" not in st.session_state:
             st.warning("Harap lakukan preprocessing terlebih dahulu.")
         elif "normalized" not in st.session_state or not st.session_state["normalized"]:
             st.warning("⚠️ Harap lakukan normalisasi data terlebih dahulu sebelum melanjutkan ke pemodelan Random Forest.")
-
         else:
             st.info("Silakan lakukan proses optimasi Random Forest menggunakan PSO di sini.")
-
-            # Mapping rasio ke file model hasil optimasi
+    
+            # Mapping rasio ke ID Google Drive
             rasio_opsi_pso = {
                 "50:50": "1Kax1ZcS0toPrQQR7KLZwCjZFBZ2MwezM",
                 "60:40": "1D9vyfEQ2Bi8wST39GkgmjNMOqeweRcQb",
@@ -270,12 +269,14 @@ def main():
                 "80:20": "1x-CBDynz1IGXFKlAtlGUlt7WYx21XVbi",
                 "90:10": "1lnY0GytPzY66S2JAMTdHWztTqiwcTCkm",
             }
-
-            # Dropdown untuk pilih rasio
+    
+            # Dropdown untuk memilih rasio
             selected_rasio_label = st.selectbox("Pilih rasio data latih dan uji:", list(rasio_opsi_pso.keys()))
-            model_path_pso = rasio_opsi_pso[selected_rasio_label]
-
-            # Hitung dan tampilkan jumlah data train-test
+    
+            # Ambil ID Google Drive sesuai rasio
+            file_ref = rasio_opsi_pso[selected_rasio_label]
+    
+            # Hitung jumlah data train-test
             total_data = len(st.session_state["X"])
             test_size = {
                 "50:50": 0.5,
@@ -286,49 +287,46 @@ def main():
             }[selected_rasio_label]
             train_count = int((1 - test_size) * total_data)
             test_count = int(test_size * total_data)
-
+    
             st.info(f"Jumlah data latih: {train_count}")
             st.info(f"Jumlah data uji: {test_count}")
-            # Tentukan lokasi file model
-            if len(file_ref) == 33 and not os.path.exists(file_ref):  # Deteksi jika itu Google Drive ID
-                model_dir = "model"
-                os.makedirs(model_dir, exist_ok=True)
-                model_path_pso = f"{model_dir}/rfpso_{selected_rasio_label.replace(':', '')}.pkl"
     
-                # Unduh file jika belum ada
-                if not os.path.exists(model_path_pso) or os.path.getsize(model_path_pso) == 0:
-                    with st.spinner("🔽 Mengunduh model hasil PSO dari Google Drive..."):
-                        try:
-                            gdown.download(f"https://drive.google.com/uc?id={file_ref}", model_path_pso, quiet=False, fuzzy=True)
-                        except Exception as e:
-                            st.error(f"Gagal mengunduh model dari Google Drive: {e}")
-                            st.stop()
-            else:
-                model_path_pso = file_ref  # Ini file lokal
-
-            # Cek dan load file model PSO
+            # Persiapkan path file lokal untuk menyimpan model
+            model_dir = "model"
+            os.makedirs(model_dir, exist_ok=True)
+            model_path_pso = f"{model_dir}/rfpso_{selected_rasio_label.replace(':', '')}.pkl"
+    
+            # Jika file belum ada, unduh dari Google Drive
+            if not os.path.exists(model_path_pso) or os.path.getsize(model_path_pso) == 0:
+                with st.spinner("🔽 Mengunduh model hasil PSO dari Google Drive..."):
+                    try:
+                        import gdown
+                        gdown.download(f"https://drive.google.com/uc?id={file_ref}", model_path_pso, quiet=False, fuzzy=True)
+                    except Exception as e:
+                        st.error(f"Gagal mengunduh model dari Google Drive: {e}")
+                        st.stop()
+    
+            # Cek dan load model
             if os.path.exists(model_path_pso):
                 try:
                     with open(model_path_pso, "rb") as f:
                         model_data = pickle.load(f)
-
+    
                     model_rf_pso = model_data.get("model")
                     params = model_data.get("params", {})
                     mape_train = params.get("mape_train")
                     mape_test = params.get("mape_test")
-
+    
                     if model_rf_pso and mape_train is not None and mape_test is not None:
                         st.subheader("📌 Parameter Hasil Optimasi (PSO)")
-
-                        # Tampilkan parameter hasil PSO (readonly)
+    
                         st.number_input("Jumlah pohon (n_estimators)", value=params.get("n_estimators", 0), disabled=True)
                         st.number_input("Kedalaman maksimum pohon (max_depth)", value=params.get("max_depth", 0), disabled=True)
                         st.number_input("Max features", value=params.get("max_features", 1), disabled=True)
-
+    
                         st.write(f"📊 MAPE Training: **{mape_train:.2f}%**")
                         st.write(f"📊 MAPE Testing : **{mape_test:.2f}%**")
-
-                        # Evaluasi kategori berdasarkan nilai MAPE Testing
+    
                         if mape_test < 10:
                             st.success("🎯 Nilai MAPE Testing dalam kategori **SANGAT BAIK**")
                         elif 10 <= mape_test < 20:
@@ -337,13 +335,13 @@ def main():
                             st.warning("⚠️ Nilai MAPE Testing dalam kategori **CUKUP BAIK**")
                         else:
                             st.error("❌ Nilai MAPE Testing dalam kategori **BURUK** ")
-
                     else:
                         st.error("Parameter model atau nilai MAPE tidak ditemukan.")
                 except Exception as e:
                     st.error(f"Terjadi kesalahan saat memuat model: {e}")
             else:
-                st.error("File model hasil optimasi PSO tidak ditemukan.")
+                st.error("❌ File model hasil optimasi PSO tidak ditemukan setelah proses unduhan.")
+
 
     elif menu == "Predictions":
         st.header("Prediksi Hasil Panen")
