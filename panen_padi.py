@@ -205,7 +205,7 @@ def main():
             y = st.session_state["y"]
 
             X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=test_size, random_state=42
+                X, y, test_size=selected_rasio["test_size"], random_state=42
             )
 
            # Unduh file model jika belum ada
